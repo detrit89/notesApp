@@ -1,4 +1,21 @@
-const notes = []
+const fs = require("fs")
+
+const FILE_NAME = 'notes.json'
+
+function loadNotes() {
+    try {
+        const data = fs.readFileSync(FILE_NAME, 'utf-8')
+        return JSON.parse(data)
+    } catch(error) {
+        return []
+    }
+}
+
+function saveNotes (notes) {
+    fs.writeFileSync(FILE_NAME, JSON.stringify(notes, null, 2))
+}
+
+const notes = loadNotes()
 
 const command = process.argv[2]
 const argument = process.argv[3]
@@ -10,6 +27,7 @@ function addNote (note) {
     }
 
     notes.push(newNotes)
+    saveNotes(notes)
     console.log(`New note added`)
     console.log(notes)
 }
@@ -52,8 +70,21 @@ function deleteNote (id) {
 
     notes.length = 0
     notes.push(...filt)
+    saveNotes(notes)
     console.log(`Note deleted`)
 }
+
+function helpCommand() {
+    console.log(`Availabe commands:
+    
+    node index.js add "text"      -> add new note
+    node index.js list            -> show all notes
+    node index.js search "text"   -> search notes
+    node index.js delete ID       -> delete note
+    node index.js help            -> show help       
+    `)
+}
+
 
 if (command == "add") {
     addNote(argument)
@@ -66,4 +97,8 @@ if (command == "search") {
 }
 if (command == "delete") {
     deleteNote(argument)
+}
+
+if (command == "help") {
+    helpCommand()
 }
