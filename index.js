@@ -7,6 +7,7 @@ function loadNotes() {
         const data = fs.readFileSync(FILE_NAME, 'utf-8')
         return JSON.parse(data)
     } catch(error) {
+        console.error(`Failed to load notes: ${error}`)
         return []
     }
 }
@@ -21,12 +22,8 @@ const command = process.argv[2]
 const argument = process.argv[3]
 
 function addNote (note) {
-    const newNotes = {
-        id: notes.length + 1,
-        text: note
-    }
 
-    notes.push(newNotes)
+    notes.push(note)
     saveNotes(notes)
     console.log(`New note added`)
     console.log(notes)
@@ -37,45 +34,61 @@ function checkList () {
         console.log(`notes empty`)
         return
     }
-    notes.forEach((note) => {
-        console.log(`${note.id} - ${note.text}`)
+    notes.forEach((note, index) => {
+        console.log(`${index + 1} - ${note}`)
     })
 }
 
 function searchNote (searchText) {
-    const filt = notes.filter((text) => {
-        return text.text.includes(searchText)
+    const notesWithIndex = notes.map((note, index) => {
+        return {
+            note: note,
+            index: index
+        }
+    })
+     const filt = notesWithIndex.filter((text) => {
+        return text.note.includes(searchText)
     })
     if (filt.length === 0) {
         console.log(`Nothing found`)
         return
     }
-    filt.forEach((note) => {
-       console.log(`${note.id} - ${note.text}`)
+    filt.forEach((item) => {
+       console.log(`${item.index + 1} - ${item.note}`)
     })
 }
 
 function deleteNote (id) {
-    const finds = notes.find((notes) => {
-        return notes.id === Number(id)
+    const indexId = notes.map((note, index) => {
+        return {
+            note: note,
+            id: index
+        }
+    })
+
+    const finds = indexId.find((notes) => {
+        return notes.id+1 === Number(id)
     })
     if (!finds) {
         console.log(`Note not found`)
         return
     }
 
-    const filt = notes.filter((note) => {
-        return note.id !== Number(id)
+    const filt = indexId.filter((note) => {
+        return note.id+1  !== Number(id)
+    })
+    const del = filt.map((text) => {
+        return text.note
     })
 
     notes.length = 0
-    notes.push(...filt)
+    notes.push(...del)
     saveNotes(notes)
     console.log(`Note deleted`)
 }
 
 function helpCommand() {
-    console.log(`Availabe commands:
+    console.log(`Available commands:
     
     node index.js add "text"      -> add new note
     node index.js list            -> show all notes
@@ -86,19 +99,19 @@ function helpCommand() {
 }
 
 
-if (command == "add") {
+if (command === "add") {
     addNote(argument)
 }
-if (command == "list") {
+if (command === "list") {
     checkList()
 }
-if (command == "search") {
+if (command === "search") {
     searchNote(argument)
 }
-if (command == "delete") {
+if (command === "delete") {
     deleteNote(argument)
 }
 
-if (command == "help") {
+if (command === "help") {
     helpCommand()
 }
