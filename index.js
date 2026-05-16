@@ -17,26 +17,34 @@ function saveNotes (notes) {
 }
 
 const notes = loadNotes()
-
 const command = process.argv[2]
 const argument = process.argv[3]
 
 function addNote (note) {
-
+    for(let i = 0; i < notes.length; i++) {
+        if(notes[i] === null) {
+            notes[i] = note
+            saveNotes(notes)
+            console.log("New note added")
+            return
+        }
+    }
     notes.push(note)
     saveNotes(notes)
     console.log(`New note added`)
-    console.log(notes)
 }
 
 function checkList () {
-    if (notes.length == 0) {
-        console.log(`notes empty`)
-        return
-    }
+    let hasNotes = false
     notes.forEach((note, index) => {
-        console.log(`${index + 1} - ${note}`)
+        if(note !== null) {
+            hasNotes = true
+            console.log(`${index + 1} - ${note}`)
+        }
     })
+    if(!hasNotes) {
+        console.log("notes empty")
+    }
 }
 
 function searchNote (searchText) {
@@ -47,7 +55,9 @@ function searchNote (searchText) {
         }
     })
      const filt = notesWithIndex.filter((text) => {
-        return text.note.includes(searchText)
+        if (text.note !== null){
+            return text.note.includes(searchText)
+        }
     })
     if (filt.length === 0) {
         console.log(`Nothing found`)
@@ -59,30 +69,12 @@ function searchNote (searchText) {
 }
 
 function deleteNote (id) {
-    const indexId = notes.map((note, index) => {
-        return {
-            note: note,
-            id: index
-        }
-    })
-
-    const finds = indexId.find((notes) => {
-        return notes.id+1 === Number(id)
-    })
-    if (!finds) {
-        console.log(`Note not found`)
+    if(notes[Number(id)-1] === null || notes[Number(id)-1] === undefined) {
+        console.log("Note not found")
         return
     }
 
-    const filt = indexId.filter((note) => {
-        return note.id+1  !== Number(id)
-    })
-    const del = filt.map((text) => {
-        return text.note
-    })
-
-    notes.length = 0
-    notes.push(...del)
+    notes[Number(id)-1] = null
     saveNotes(notes)
     console.log(`Note deleted`)
 }
