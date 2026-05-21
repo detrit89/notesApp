@@ -15,12 +15,10 @@ Simple command-line notes application built with Node.js.
 
 ```txt
 project/
-├── main.js
-├── notes.js
-├── add.js
-├── remove.js
-├── search.js
-├── show.js
+├── index.js
+├── commands.js
+├── handlers.js
+├── storage.js
 └── notes.json
 ```
 
@@ -28,8 +26,8 @@ project/
 
 - JavaScript
 - Node.js
-- File System (`fs`)
 - ES Modules (`import/export`)
+- File System (`fs`)
 
 ## Storage
 
@@ -39,13 +37,7 @@ Notes are stored in:
 notes.json
 ```
 
-Deleted notes are replaced with:
-
-```txt
-null
-```
-
-and reused when adding new notes.
+Deleted notes are replaced with `null` and reused when adding new notes.
 
 ## Installation
 
@@ -61,40 +53,34 @@ Go to project folder:
 cd cli
 ```
 
-Install dependencies (if needed):
-
-```bash
-npm install
-```
-
 ## Usage
 
 ### Add note
 
 ```bash
-node project/main.js add "Buy milk"
+node project/index.js add "Buy milk"
 ```
 
 ### Show all notes
 
 ```bash
-node project/main.js list
+node project/index.js list
 ```
 
-### Search notes
+### Search note
 
 ```bash
-node project/main.js search "milk"
+node project/index.js search "milk"
 ```
 
 ### Delete note
 
 ```bash
-node project/main.js delete 1
+node project/index.js delete 1
 ```
 
-### Show help
+### Help
 
 ```bash
-node project/main.js help
+node project/index.js help
 ```

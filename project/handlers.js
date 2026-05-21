@@ -55,10 +55,10 @@ export function checkList () {
 export function helpCommand() {
     console.log(`Available commands:
     
-    node index.js add "text"      -> add new note
-    node index.js list            -> show all notes
-    node index.js search "text"   -> search notes
-    node index.js delete ID       -> delete note
-    node index.js help            -> show help       
+    node project/index.js add "text"      -> add new note
+    node project/index.js list            -> show all notes
+    node project/index.js search "text"   -> search notes
+    node project/index.js delete ID       -> delete note
+    node project/index.js help            -> show help       
     `)
 }
