@@ -2,7 +2,7 @@ import { notes, saveNotes } from './notes.js'
 export function searchNote (searchText) {
     let hasSearch = false 
     notes.forEach((text, index) => {
-        if (text.note !== null && text.includes(searchText)) {
+        if (text !== null && text.includes(searchText)) {
                 hasSearch = true
                 console.log(`${index + 1} - ${text}`)
         }
