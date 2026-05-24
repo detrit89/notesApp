@@ -17,3 +17,48 @@ export function saveNotes (notes) {
 }
 
 export const notes = loadNotes()
+
+export function deleteNote (id) {
+    let index = Number(id)-1
+    if(notes[index] === null || notes[index] === undefined) {
+        return false 
+    }
+
+    notes[index] = null
+    saveNotes(notes)
+    return true 
+}
+
+export function searchNote (searchText) {
+    let result = []
+    notes.forEach((text, index) => {
+        if (text !== null && text.includes(searchText)) {
+                result.push({index, text})
+        }
+    })
+    return result
+}
+
+export function addNote (note) {
+    for(let i = 0; i < notes.length; i++) {
+        if(notes[i] === null) {
+            notes[i] = note
+            saveNotes(notes)
+            return
+        }
+    }
+    notes.push(note)
+    saveNotes(notes)
+}
+
+export function getAllNotes () {
+    let result = []
+    notes.forEach((note, index) => {
+        if(note !== null) {
+            result.push({index, note})
+        }
+    })
+    return result
+}
+
+

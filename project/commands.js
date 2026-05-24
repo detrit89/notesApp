@@ -1,5 +1,5 @@
 import { error } from 'node:console'
-import { deleteNote, searchNote, addNote, checkList, helpCommand} from './handlers.js'
+import { deleteNotes, search, addNotes, checkList, helpCommand} from './handlers.js'
 
 export function runCommand(command, argument) {
     if (!command) {
@@ -11,7 +11,7 @@ export function runCommand(command, argument) {
             console.log("Write note text")
             return
         }
-        addNote(argument)
+        addNotes(argument)
         return
     }
     if (command === "list") {
@@ -23,7 +23,7 @@ export function runCommand(command, argument) {
             console.log("Write search text")
             return
         }
-        searchNote(argument)
+        search(argument)
         return
     }
     if (command === "delete") {
@@ -31,7 +31,7 @@ export function runCommand(command, argument) {
             console.log("Write note id")
             return
         }
-        deleteNote(argument)
+        deleteNotes(argument)
         return
     }
     if (command === "help") {

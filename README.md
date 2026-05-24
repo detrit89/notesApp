@@ -5,39 +5,52 @@ Simple command-line notes application built with Node.js.
 ## Features
 
 - Add notes
-- List notes
+- Show all notes
 - Search notes
 - Delete notes
 - Save notes to JSON file
-- Reuse empty note slots (`null`)
+- Reuse deleted note slots (`null`)
+- Modular architecture
 
 ## Project Structure
 
 ```txt
-project/
-├── index.js
-├── commands.js
-├── handlers.js
-├── storage.js
-└── notes.json
+CLI/
+├── project/
+│   ├── commands.js
+│   ├── handlers.js
+│   ├── index.js
+│   └── storage.js
+├── notes.json
+└── README.md
 ```
+
+## Architecture
+
+The project uses a modular structure:
+
+- `index.js` — entry point, gets command line arguments
+- `commands.js` — routes commands
+- `handlers.js` — contains application logic
+- `storage.js` — works with note data and `notes.json`
+
+`handlers` do not know how notes are stored.
+
+`storage` provides a data access interface through functions such as:
+
+- `addNote()`
+- `deleteNote()`
+- `searchNote()`
+- `getAllNotes()`
+
+This makes the project easier to maintain, refactor, and extend.
 
 ## Technologies
 
-- JavaScript
+- JavaScript (ES Modules)
 - Node.js
-- ES Modules (`import/export`)
-- File System (`fs`)
-
-## Storage
-
-Notes are stored in:
-
-```txt
-notes.json
-```
-
-Deleted notes are replaced with `null` and reused when adding new notes.
+- `fs` module
+- JSON file storage
 
 ## Installation
 
@@ -50,7 +63,7 @@ git clone <repository-url>
 Go to project folder:
 
 ```bash
-cd cli
+cd CLI
 ```
 
 ## Usage
@@ -67,7 +80,7 @@ node project/index.js add "Buy milk"
 node project/index.js list
 ```
 
-### Search note
+### Search notes
 
 ```bash
 node project/index.js search "milk"
@@ -84,3 +97,13 @@ node project/index.js delete 1
 ```bash
 node project/index.js help
 ```
+
+## Storage
+
+Notes are stored in:
+
+```txt
+notes.json
+```
+
+Deleted notes are replaced with `null` and reused later when new notes are added.

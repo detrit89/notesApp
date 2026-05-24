@@ -1,55 +1,43 @@
-import { notes, saveNotes } from "./storage.js"
+import { addNote, getAllNotes, searchNote, deleteNote } from "./storage.js"
 
-export function deleteNote (id) {
-    if(notes[Number(id)-1] === null || notes[Number(id)-1] === undefined) {
-        console.log("Note not found")
+
+export function search(searchText) {
+    let found = searchNote(searchText)
+    
+    if(found.length === 0) {
+        console.log("notes not found")
+        return
+    }
+    found.forEach((item) => {
+        console.log(`${item.index + 1} - ${item.text}`)
+    })
+}
+
+export function deleteNotes(id) {
+    let del = deleteNote(id)
+    if (!del) {
+        console.log(`Note not found`)
+        return
+    } 
+    console.log("note delete")
+}
+
+export function addNotes(text) {
+    addNote(text)
+    console.log("New note added")
+}
+
+export function checkList() {
+    const notes = getAllNotes() 
+
+    if (notes.length === 0) {
+        console.log(`notes not found`)
         return
     }
 
-    notes[Number(id)-1] = null
-    saveNotes(notes)
-    console.log(`Note deleted`)
-}
-
-export function searchNote (searchText) {
-    let hasSearch = false 
-    notes.forEach((text, index) => {
-        if (text !== null && text.includes(searchText)) {
-                hasSearch = true
-                console.log(`${index + 1} - ${text}`)
-        }
-
+    notes.forEach((item) => {
+        console.log(`${item.index +1} - ${item.note}`)
     })
-    if(!hasSearch) {
-        console.log("notes not found")
-    }
-}
-
-export function addNote (note) {
-    for(let i = 0; i < notes.length; i++) {
-        if(notes[i] === null) {
-            notes[i] = note
-            saveNotes(notes)
-            console.log("New note added")
-            return
-        }
-    }
-    notes.push(note)
-    saveNotes(notes)
-    console.log(`New note added`)
-}
-
-export function checkList () {
-    let hasNotes = false
-    notes.forEach((note, index) => {
-        if(note !== null) {
-            hasNotes = true
-            console.log(`${index + 1} - ${note}`)
-        }
-    })
-    if(!hasNotes) {
-        console.log("notes empty")
-    }
 }
 
 export function helpCommand() {
