@@ -4,11 +4,12 @@ Simple command-line notes application built with Node.js.
 
 ## Features
 
-- Add notes
+- Add notes with title and text
 - Show all notes
-- Search notes
+- Search notes by title or text
 - Delete notes
 - Save notes to JSON file
+- Store creation date for every note
 - Reuse deleted note slots (`null`)
 - Modular architecture
 
@@ -34,16 +35,30 @@ The project uses a modular structure:
 - `handlers.js` — contains application logic
 - `storage.js` — works with note data and `notes.json`
 
-`handlers` do not know how notes are stored.
+The application follows a layered structure:
 
-`storage` provides a data access interface through functions such as:
+```txt
+index.js
+    ↓
+commands.js
+    ↓
+handlers.js
+    ↓
+storage.js
+```
+
+### Responsibilities
+
+`handlers.js` contains business logic and does not know how notes are stored.
+
+`storage.js` is responsible for working with data and provides an interface through functions:
 
 - `addNote()`
 - `deleteNote()`
 - `searchNote()`
 - `getAllNotes()`
 
-This makes the project easier to maintain, refactor, and extend.
+This structure makes the project easier to maintain, refactor, and extend.
 
 ## Technologies
 
@@ -71,7 +86,17 @@ cd CLI
 ### Add note
 
 ```bash
-node project/index.js add "Buy milk"
+node project/index.js add "Buy milk" "Shopping"
+```
+
+Example note:
+
+```json
+{
+  "title": "Shopping",
+  "note": "Buy milk",
+  "data": "26.05.2026, 18:30"
+}
 ```
 
 ### Show all notes
@@ -80,7 +105,15 @@ node project/index.js add "Buy milk"
 node project/index.js list
 ```
 
+Example output:
+
+```txt
+1 - Buy milk - Shopping - 26.05.2026, 18:30
+```
+
 ### Search notes
+
+Search works by note text and title.
 
 ```bash
 node project/index.js search "milk"
@@ -104,6 +137,24 @@ Notes are stored in:
 
 ```txt
 notes.json
+```
+
+Example structure:
+
+```json
+[
+  {
+    "title": "Shopping",
+    "note": "Buy milk",
+    "data": "26.05.2026, 18:30"
+  },
+  null,
+  {
+    "title": "Work",
+    "note": "Finish CLI project",
+    "data": "26.05.2026, 20:10"
+  }
+]
 ```
 
 Deleted notes are replaced with `null` and reused later when new notes are added.

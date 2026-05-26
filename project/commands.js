@@ -1,7 +1,7 @@
 import { error } from 'node:console'
 import { deleteNotes, search, addNotes, checkList, helpCommand} from './handlers.js'
 
-export function runCommand(command, argument) {
+export function runCommand(command, argument, title) {
     if (!command) {
         console.log("Write command")
         return
@@ -11,7 +11,7 @@ export function runCommand(command, argument) {
             console.log("Write note text")
             return
         }
-        addNotes(argument)
+        addNotes(argument, title)
         return
     }
     if (command === "list") {

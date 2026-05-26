@@ -32,22 +32,28 @@ export function deleteNote (id) {
 export function searchNote (searchText) {
     let result = []
     notes.forEach((text, index) => {
-        if (text !== null && text.includes(searchText)) {
+        if (text !== null && (text.note.includes(searchText) || text.title.includes(searchText))) {
                 result.push({index, text})
         }
     })
     return result
 }
 
-export function addNote (note) {
+export function addNote (title, note) {
+    const notess = {
+        title: title,
+        note: note,
+        data: new Date().toLocaleString()
+    }
+
     for(let i = 0; i < notes.length; i++) {
         if(notes[i] === null) {
-            notes[i] = note
+            notes[i] = notess
             saveNotes(notes)
             return
         }
     }
-    notes.push(note)
+    notes.push(notess)
     saveNotes(notes)
 }
 
