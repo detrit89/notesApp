@@ -1,52 +1,55 @@
-import { addNote, getAllNotes, searchNote, deleteNote } from "./storage.js"
+import { addNote, getAllNotes, searchNotes, deleteNote } from "./storage.js"
+
+export function formatNote(note, index) {
+    return `${index +1 } - ${note.title} - ${note.body} - ${note.createdAt} `
+}
 
 
-export function search(searchText) {
-    let found = searchNote(searchText)
+export function handleSearchNotes(searchText) {
+    const foundNotes = searchNotes(searchText)
     
-    if(found.length === 0) {
-        console.log("notes not found")
+    if(foundNotes.length === 0) {
+        console.log("No notes found")
         return
     }
-    found.forEach((item) => {
-        console.log(`${item.index + 1} - ${item.text.note} - ${item.text.title}`)
+    foundNotes.forEach((item) => {
+        console.log(formatNote(item.note, item.index))
     })
 }
 
-export function deleteNotes(id) {
-    let del = deleteNote(id)
-    if (!del) {
+export function handleDeleteNote(id) {
+    const isDeleteSuccessful = deleteNote(id)
+    if (!isDeleteSuccessful) {
         console.log(`Note not found`)
         return
     } 
-    console.log("note delete")
+    console.log("Note deleted")
 }
 
-export function addNotes(text, title) {
-    addNote(text, title)
+export function handleAddNote(title, body) {
+    addNote(title, body)
     console.log("New note added")
 }
 
-export function checkList() {
-    const notes = getAllNotes() 
-
+export function handleListNotes() {
+    const notes = getAllNotes()
     if (notes.length === 0) {
-        console.log(`notes not found`)
+        console.log(`Notes not found`)
         return
     }
 
     notes.forEach((item) => {
-        console.log(`${item.index +1} - ${item.note.note} - ${item.note.title} - ${item.note.data}`)
+        console.log(formatNote(item.note, item.index))
     })
 }
 
 export function helpCommand() {
     console.log(`Available commands:
     
-    node project/index.js add "text" "title"       -> add new note
-    node project/index.js list            -> show all notes
-    node project/index.js search "text"   -> search notes
-    node project/index.js delete ID       -> delete note
-    node project/index.js help            -> show help       
+    node project/index.js add "title" "body"   -> add new note
+    node project/index.js list                -> show all notes
+    node project/index.js search "text"       -> search notes
+    node project/index.js delete ID           -> delete note
+    node project/index.js help                -> show help       
     `)
 }

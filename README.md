@@ -4,12 +4,11 @@ Simple command-line notes application built with Node.js.
 
 ## Features
 
-- Add notes with title and text
+- Add notes with title and body
 - Show all notes
-- Search notes by title or text
+- Search notes by title or body
 - Delete notes
 - Save notes to JSON file
-- Store creation date for every note
 - Reuse deleted note slots (`null`)
 - Modular architecture
 
@@ -28,37 +27,99 @@ CLI/
 
 ## Architecture
 
-The project uses a modular structure:
+The project follows a modular architecture with separated responsibilities.
 
-- `index.js` — entry point, gets command line arguments
-- `commands.js` — routes commands
-- `handlers.js` — contains application logic
-- `storage.js` — works with note data and `notes.json`
+### index.js
 
-The application follows a layered structure:
+Entry point of the application.
 
-```txt
-index.js
-    ↓
-commands.js
-    ↓
-handlers.js
-    ↓
-storage.js
+Responsibilities:
+
+- Reads command-line arguments (`process.argv`)
+- Passes data to command router
+
+### commands.js
+
+Command router.
+
+Responsibilities:
+
+- Validates user input
+- Routes commands to handlers
+
+Supported commands:
+
+- `add`
+- `list`
+- `search`
+- `delete`
+- `help`
+
+### handlers.js
+
+Application logic layer.
+
+Responsibilities:
+
+- Handles note operations
+- Formats output
+- Works with storage through functions
+
+Handlers do not know how data is stored internally.
+
+Example:
+
+Instead of:
+
+```js
+notes[index] = null
+saveNotes(notes)
 ```
 
-### Responsibilities
+Handlers use:
 
-`handlers.js` contains business logic and does not know how notes are stored.
+```js
+deleteNote(id)
+```
 
-`storage.js` is responsible for working with data and provides an interface through functions:
+This reduces coupling between modules.
 
-- `addNote()`
-- `deleteNote()`
-- `searchNote()`
-- `getAllNotes()`
+### storage.js
 
-This structure makes the project easier to maintain, refactor, and extend.
+Data layer.
+
+Responsibilities:
+
+- Load notes from file
+- Save notes
+- Add notes
+- Delete notes
+- Search notes
+- Return all notes
+
+Data is stored inside:
+
+```txt
+notes.json
+```
+
+Each note has the following structure:
+
+```json
+{
+  "title": "Shopping",
+  "body": "Buy milk",
+  "createdAt": "26.05.2026, 23:10:00"
+}
+```
+
+Deleted notes are replaced with:
+
+```json
+null
+```
+
+and reused later when new notes are added.
 
 ## Technologies
 
@@ -86,17 +147,7 @@ cd CLI
 ### Add note
 
 ```bash
-node project/index.js add "Buy milk" "Shopping"
-```
-
-Example note:
-
-```json
-{
-  "title": "Shopping",
-  "note": "Buy milk",
-  "data": "26.05.2026, 18:30"
-}
+node project/index.js add "Shopping" "Buy milk"
 ```
 
 ### Show all notes
@@ -105,15 +156,7 @@ Example note:
 node project/index.js list
 ```
 
-Example output:
-
-```txt
-1 - Buy milk - Shopping - 26.05.2026, 18:30
-```
-
 ### Search notes
-
-Search works by note text and title.
 
 ```bash
 node project/index.js search "milk"
@@ -131,30 +174,21 @@ node project/index.js delete 1
 node project/index.js help
 ```
 
-## Storage
-
-Notes are stored in:
+## Example Output
 
 ```txt
-notes.json
+1 - Shopping - Buy milk - 26.05.2026, 23:10:00
+2 - Work - Finish project - 26.05.2026, 23:15:00
 ```
 
-Example structure:
+## Concepts Practiced
 
-```json
-[
-  {
-    "title": "Shopping",
-    "note": "Buy milk",
-    "data": "26.05.2026, 18:30"
-  },
-  null,
-  {
-    "title": "Work",
-    "note": "Finish CLI project",
-    "data": "26.05.2026, 20:10"
-  }
-]
-```
-
-Deleted notes are replaced with `null` and reused later when new notes are added.
+- Modular architecture
+- Separation of concerns
+- Low coupling
+- High cohesion
+- DRY principle
+- File system (`fs`)
+- JSON persistence
+- CLI arguments (`process.argv`)
+- Functions and modules

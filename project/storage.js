@@ -19,7 +19,7 @@ export function saveNotes (notes) {
 export const notes = loadNotes()
 
 export function deleteNote (id) {
-    let index = Number(id)-1
+    const index = Number(id)-1
     if(notes[index] === null || notes[index] === undefined) {
         return false 
     }
@@ -29,42 +29,42 @@ export function deleteNote (id) {
     return true 
 }
 
-export function searchNote (searchText) {
-    let result = []
-    notes.forEach((text, index) => {
-        if (text !== null && (text.note.includes(searchText) || text.title.includes(searchText))) {
-                result.push({index, text})
+export function searchNotes (searchText) {
+    const foundNotes = []
+    notes.forEach((note, index) => {
+        if (note !== null && (note.body.includes(searchText) || note.title.includes(searchText))) {
+                foundNotes.push({index, note})
         }
     })
-    return result
+    return foundNotes
 }
 
-export function addNote (title, note) {
-    const notess = {
+export function addNote (title, body) {
+    const newNote = {
         title: title,
-        note: note,
-        data: new Date().toLocaleString()
+        body: body,
+        createdAt: new Date().toLocaleString()
     }
 
     for(let i = 0; i < notes.length; i++) {
         if(notes[i] === null) {
-            notes[i] = notess
+            notes[i] = newNote
             saveNotes(notes)
             return
         }
     }
-    notes.push(notess)
+    notes.push(newNote)
     saveNotes(notes)
 }
 
 export function getAllNotes () {
-    let result = []
+    const notesList = []
     notes.forEach((note, index) => {
         if(note !== null) {
-            result.push({index, note})
+            notesList.push({index, note})
         }
     })
-    return result
+    return notesList
 }
 
 
