@@ -1,59 +1,108 @@
-# Notes CLI
+# Notes App
 
-Simple CLI application for managing notes using Node.js.
+A simple CLI notes application built with JavaScript.
 
-## Features
+Features:
 
 - Add notes
-- List all notes
+- View all notes
 - Search notes
 - Delete notes
-- Save notes in JSON file
+- Store data in `notes.json`
+
+This project was created as a learning CLI app to practice:
+
+- JavaScript
+- Node.js
+- File system (`fs`)
+- Command-line arguments (`process.argv`)
+- Data structures (`Map`)
+
+---
+
+## Project Structure
+
+```txt
+notesApp/
+│── project/
+│   ├── index.js
+│   ├── commands.js
+│   ├── handlers.js
+│   ├── storage.js
+│
+│── notes.json
+│── README.md
+```
+
+### File Description
+
+- `index.js` — application entry point, receives command-line arguments
+- `commands.js` — command handler (`add`, `list`, `search`, `delete`, `help`)
+- `handlers.js` — business logic for commands
+- `storage.js` — notes storage, loading and saving logic
+- `notes.json` — local notes storage
+- `README.md` — project documentation
+
+---
 
 ## Installation
 
-Clone repository:
+Clone the repository:
 
 ```bash
-git clone <your-repository-url>
-cd notes-cli
+git clone https://github.com/detrit89/notesApp.git
 ```
+
+Go to the project folder:
+
+```bash
+cd notesApp
+```
+
+---
 
 ## Available Commands
 
-### Add new note
+### Add a Note
 
 ```bash
-node project/index.js add "title" "body"
+node project/index.js add "Title" "Body"
 ```
 
 Example:
 
 ```bash
-node project/index.js add "Shopping" "Buy milk and eggs"
+node project/index.js add "Shopping" "Buy milk"
 ```
 
-### Show all notes
+---
+
+### Show All Notes
 
 ```bash
 node project/index.js list
 ```
 
-### Search notes
+Example output:
 
-```bash
-node project/index.js search "text"
+```txt
+1 - Shopping - Buy milk - 29.05.2026, 20:00:00
+2 - Work - Finish project - 29.05.2026, 20:05:00
 ```
 
-Example:
+---
+
+### Search Notes
+
+Search works by `title` and `body`.
 
 ```bash
 node project/index.js search "milk"
 ```
 
-Search checks both note title and body.
+---
 
-### Delete note
+### Delete a Note
 
 ```bash
 node project/index.js delete ID
@@ -65,43 +114,63 @@ Example:
 node project/index.js delete 1
 ```
 
-### Show help
+---
+
+### Help
 
 ```bash
 node project/index.js help
 ```
 
-## Project Structure
+---
 
-```txt
-.
-├── README.md
-├── notes.json
-└── project
-    ├── index.js
-    ├── commands.js
-    ├── handlers.js
-    └── storage.js
-```
+## Data Storage
 
-## Note Format
+Notes are stored inside `notes.json`.
 
-Notes are stored in `notes.json`.
+The application uses `Map` internally:
+
+- **key** → note ID
+- **value** → note object
 
 Example:
 
-```json
-[
-  {
-    "title": "Shopping",
-    "body": "Buy milk and eggs",
-    "createdAt": "5/29/2026, 12:00:00 PM"
+```js
+Map {
+  1 => {
+    title: "Shopping",
+    body: "Buy milk",
+    createdAt: "29.05.2026, 20:00:00"
   }
-]
+}
 ```
 
-## Technologies
+Before saving, `Map` is converted into an object using:
 
-- JavaScript
+```js
+Object.fromEntries(notes)
+```
+
+When loading data, the object is converted back into `Map`.
+
+---
+
+## Technologies Used
+
+- JavaScript (ES Modules)
 - Node.js
-- File System (`fs`)
+- `fs`
+- `process.argv`
+- `Map`
+- JSON
+
+---
+
+## Future Improvements
+
+- Edit notes (`edit`)
+- Note sorting
+- Colored console output
+- Better validation
+- Automated tests
+- UUID instead of numeric IDs

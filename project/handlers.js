@@ -1,20 +1,24 @@
 import { addNote, getAllNotes, searchNotes, deleteNote } from "./storage.js"
 
-export function formatNote(note, index) {
-    return `${index +1 } - ${note.title} - ${note.body} - ${note.createdAt} `
+export function formatNote(id, item) {
+    return `${id} - ${item.title} - ${item.body} - ${item.createdAt} `
 }
 
 
 export function handleSearchNotes(searchText) {
+    if(!searchText) {
+        console.log("Write search text")
+        return
+    }
     const foundNotes = searchNotes(searchText)
     
-    if(foundNotes.length === 0) {
+    if(foundNotes.size === 0) {
         console.log("No notes found")
         return
     }
-    foundNotes.forEach((item) => {
-        console.log(formatNote(item.note, item.index))
-    })
+    for(const [id, item] of foundNotes) {
+        console.log(formatNote(id, item))
+    }
 }
 
 export function handleDeleteNote(id) {
@@ -33,14 +37,14 @@ export function handleAddNote(title, body) {
 
 export function handleListNotes() {
     const notes = getAllNotes()
-    if (notes.length === 0) {
+    if (notes.size === 0) {
         console.log(`Notes not found`)
         return
     }
 
-    notes.forEach((item) => {
-        console.log(formatNote(item.note, item.index))
-    })
+    for (const [id, item] of notes) {
+        console.log(formatNote(id, item))
+    }
 }
 
 export function helpCommand() {

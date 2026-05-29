@@ -2,40 +2,47 @@ import fs from "fs"
 
 const FILE_NAME = 'notes.json'
 
-export function loadNotes() {
+function loadNotes() {
     try {
         const data = fs.readFileSync(FILE_NAME, 'utf-8')
-        return JSON.parse(data)
+        return new Map( Object.entries(JSON.parse(data))
+            .map(([id, note]) => [Number(id), note])
+)
     } catch(error) {
         console.error(`Failed to load notes: ${error}`)
-        return []
+        return new Map()
     }
 }
 
 export function saveNotes (notes) {
-    fs.writeFileSync(FILE_NAME, JSON.stringify(notes, null, 2))
+    fs.writeFileSync(FILE_NAME, JSON.stringify(Object.fromEntries(notes), null, 2))
 }
 
 export const notes = loadNotes()
 
-export function deleteNote (id) {
-    const index = Number(id)-1
-    if(notes[index] === null || notes[index] === undefined) {
-        return false 
+let noteId = 1
+for (const id of notes.keys()) {
+    if (Number(id) >= noteId) {
+        noteId = Number(id) + 1
     }
+}
 
-    notes[index] = null
-    saveNotes(notes)
-    return true 
+export function deleteNote (id) {
+    const isDeleted = notes.delete(Number(id))
+    if (isDeleted) {
+        saveNotes(notes)
+    }
+    return isDeleted
 }
 
 export function searchNotes (searchText) {
-    const foundNotes = []
-    notes.forEach((note, index) => {
-        if (note !== null && (note.body.includes(searchText) || note.title.includes(searchText))) {
-                foundNotes.push({index, note})
+    const query = searchText.toLowerCase()
+    const foundNotes = new Map()
+    for (const [id, note] of notes) {
+        if (note.body.toLowerCase().includes(query) || note.title.toLowerCase().includes(query)) {
+               foundNotes.set(id, note)
         }
-    })
+    }
     return foundNotes
 }
 
@@ -46,25 +53,13 @@ export function addNote (title, body) {
         createdAt: new Date().toLocaleString()
     }
 
-    for(let i = 0; i < notes.length; i++) {
-        if(notes[i] === null) {
-            notes[i] = newNote
-            saveNotes(notes)
-            return
-        }
-    }
-    notes.push(newNote)
+    notes.set(noteId, newNote)
+    noteId++
     saveNotes(notes)
 }
 
 export function getAllNotes () {
-    const notesList = []
-    notes.forEach((note, index) => {
-        if(note !== null) {
-            notesList.push({index, note})
-        }
-    })
-    return notesList
+    return new Map(notes)
 }
 
 
