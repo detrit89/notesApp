@@ -1,7 +1,8 @@
 import { runCommand } from './commands.js'
 
 const command = process.argv[2]
-const argument = process.argv[3]
-const title = process.argv[4]
+const arg1 = process.argv[3]
+const arg2 = process.argv[4]
+const arg3 = process.argv[5]
 
-runCommand(command, argument, title)
+runCommand(command, arg1, arg2, arg3)

@@ -1,153 +1,36 @@
-# Notes CLI App
+# Notes CLI
 
-Simple command-line notes application built with Node.js.
+Simple CLI application for managing notes using Node.js.
 
 ## Features
 
-- Add notes with title and body
-- Show all notes
-- Search notes by title or body
-- Delete notes
-- Save notes to JSON file
-- Reuse deleted note slots (`null`)
-- Modular architecture
-
-## Project Structure
-
-```txt
-CLI/
-├── project/
-│   ├── commands.js
-│   ├── handlers.js
-│   ├── index.js
-│   └── storage.js
-├── notes.json
-└── README.md
-```
-
-## Architecture
-
-The project follows a modular architecture with separated responsibilities.
-
-### index.js
-
-Entry point of the application.
-
-Responsibilities:
-
-- Reads command-line arguments (`process.argv`)
-- Passes data to command router
-
-### commands.js
-
-Command router.
-
-Responsibilities:
-
-- Validates user input
-- Routes commands to handlers
-
-Supported commands:
-
-- `add`
-- `list`
-- `search`
-- `delete`
-- `help`
-
-### handlers.js
-
-Application logic layer.
-
-Responsibilities:
-
-- Handles note operations
-- Formats output
-- Works with storage through functions
-
-Handlers do not know how data is stored internally.
-
-Example:
-
-Instead of:
-
-```js
-notes[index] = null
-saveNotes(notes)
-```
-
-Handlers use:
-
-```js
-deleteNote(id)
-```
-
-This reduces coupling between modules.
-
-### storage.js
-
-Data layer.
-
-Responsibilities:
-
-- Load notes from file
-- Save notes
 - Add notes
-- Delete notes
+- List all notes
 - Search notes
-- Return all notes
-
-Data is stored inside:
-
-```txt
-notes.json
-```
-
-Each note has the following structure:
-
-```json
-{
-  "title": "Shopping",
-  "body": "Buy milk",
-  "createdAt": "26.05.2026, 23:10:00"
-}
-```
-
-Deleted notes are replaced with:
-
-```json
-null
-```
-
-and reused later when new notes are added.
-
-## Technologies
-
-- JavaScript (ES Modules)
-- Node.js
-- `fs` module
-- JSON file storage
+- Delete notes
+- Save notes in JSON file
 
 ## Installation
 
 Clone repository:
 
 ```bash
-git clone <repository-url>
+git clone <your-repository-url>
+cd notes-cli
 ```
 
-Go to project folder:
+## Available Commands
+
+### Add new note
 
 ```bash
-cd CLI
+node project/index.js add "title" "body"
 ```
 
-## Usage
-
-### Add note
+Example:
 
 ```bash
-node project/index.js add "Shopping" "Buy milk"
+node project/index.js add "Shopping" "Buy milk and eggs"
 ```
 
 ### Show all notes
@@ -159,36 +42,66 @@ node project/index.js list
 ### Search notes
 
 ```bash
+node project/index.js search "text"
+```
+
+Example:
+
+```bash
 node project/index.js search "milk"
 ```
 
+Search checks both note title and body.
+
 ### Delete note
+
+```bash
+node project/index.js delete ID
+```
+
+Example:
 
 ```bash
 node project/index.js delete 1
 ```
 
-### Help
+### Show help
 
 ```bash
 node project/index.js help
 ```
 
-## Example Output
+## Project Structure
 
 ```txt
-1 - Shopping - Buy milk - 26.05.2026, 23:10:00
-2 - Work - Finish project - 26.05.2026, 23:15:00
+.
+├── README.md
+├── notes.json
+└── project
+    ├── index.js
+    ├── commands.js
+    ├── handlers.js
+    └── storage.js
 ```
 
-## Concepts Practiced
+## Note Format
 
-- Modular architecture
-- Separation of concerns
-- Low coupling
-- High cohesion
-- DRY principle
-- File system (`fs`)
-- JSON persistence
-- CLI arguments (`process.argv`)
-- Functions and modules
+Notes are stored in `notes.json`.
+
+Example:
+
+```json
+[
+  {
+    "title": "Shopping",
+    "body": "Buy milk and eggs",
+    "createdAt": "5/29/2026, 12:00:00 PM"
+  }
+]
+```
+
+## Technologies
+
+- JavaScript
+- Node.js
+- File System (`fs`)
