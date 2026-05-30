@@ -37,10 +37,10 @@ export function deleteNote (id) {
 
 export function searchNotes (searchText) {
     const query = searchText.toLowerCase()
-    const foundNotes = new Map()
+    const foundNotes = []
     for (const [id, note] of notes) {
         if (note.body.toLowerCase().includes(query) || note.title.toLowerCase().includes(query)) {
-               foundNotes.set(id, note)
+               foundNotes.push({index: id, note})
         }
     }
     return foundNotes
@@ -59,7 +59,20 @@ export function addNote (title, body) {
 }
 
 export function getAllNotes () {
-    return new Map(notes)
+    const notesList = []
+    for (const [id, note] of notes) {
+        notesList.push({index: id, note})
+    }
+    return notesList
 }
 
-
+export function editNote(id, newTitle, newBody) {
+    const note = notes.get(Number(id))
+    if (!note) {
+        return false
+    }
+    note.title = newTitle
+    note.body = newBody
+    saveNotes(notes)
+    return true
+}

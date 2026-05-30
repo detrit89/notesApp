@@ -1,9 +1,8 @@
-import { addNote, getAllNotes, searchNotes, deleteNote } from "./storage.js"
+import { addNote, getAllNotes, searchNotes, deleteNote, editNote } from "./storage.js"
 
-export function formatNote(id, item) {
-    return `${id} - ${item.title} - ${item.body} - ${item.createdAt} `
+export function formatNote(note, index) {
+    return `${index} - ${note.title} - ${note.body} - ${note.createdAt} `
 }
-
 
 export function handleSearchNotes(searchText) {
     if(!searchText) {
@@ -12,13 +11,13 @@ export function handleSearchNotes(searchText) {
     }
     const foundNotes = searchNotes(searchText)
     
-    if(foundNotes.size === 0) {
+    if(foundNotes.length === 0) {
         console.log("No notes found")
         return
     }
-    for(const [id, item] of foundNotes) {
-        console.log(formatNote(id, item))
-    }
+    foundNotes.forEach((item) => {
+        console.log(formatNote(item.note, item.index))
+    })
 }
 
 export function handleDeleteNote(id) {
@@ -37,14 +36,23 @@ export function handleAddNote(title, body) {
 
 export function handleListNotes() {
     const notes = getAllNotes()
-    if (notes.size === 0) {
+    if (notes.length === 0) {
         console.log(`Notes not found`)
         return
     }
 
-    for (const [id, item] of notes) {
-        console.log(formatNote(id, item))
-    }
+    notes.forEach((item) => {
+        console.log(formatNote(item.note, item.index))
+    })
+}
+
+export function handleEditNote(id, title, body) {
+    const isEdited = editNote(id, title, body)
+    if (!isEdited) {
+        console.log("Note not found")
+        return
+    } 
+    console.log("Note edited")
 }
 
 export function helpCommand() {
@@ -54,6 +62,8 @@ export function helpCommand() {
     node project/index.js list                -> show all notes
     node project/index.js search "text"       -> search notes
     node project/index.js delete ID           -> delete note
-    node project/index.js help                -> show help       
+    node project/index.js help                -> show help    
+    node project/index.js edit id "title" "body -> edit note   
     `)
 }
+
