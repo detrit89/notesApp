@@ -58,12 +58,12 @@ export function handleEditNote(id, title, body) {
 export function helpCommand() {
     console.log(`Available commands:
     
-    node project/index.js add "title" "body"   -> add new note
-    node project/index.js list                -> show all notes
-    node project/index.js search "text"       -> search notes
-    node project/index.js delete ID           -> delete note
-    node project/index.js help                -> show help    
-    node project/index.js edit id "title" "body -> edit note   
+    node project/index.js add "title" "body"     -> add new note
+    node project/index.js list                   -> show all notes
+    node project/index.js search "text"          -> search notes
+    node project/index.js delete ID              -> delete note
+    node project/index.js help                   -> show help    
+    node project/index.js edit id "title" "body" -> edit note   
     `)
 }
 
