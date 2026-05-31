@@ -5,12 +5,7 @@ export function formatNote(note, index) {
 }
 
 export function handleSearchNotes(searchText) {
-    if(!searchText) {
-        console.log("Write search text")
-        return
-    }
     const foundNotes = searchNotes(searchText)
-    
     if(foundNotes.length === 0) {
         console.log("No notes found")
         return
