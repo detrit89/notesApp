@@ -1,57 +1,44 @@
 # Notes CLI App
 
-A simple command-line notes application built with Node.js.
+Simple CLI application for managing notes using SQLite and Node.js.
 
 ## Features
 
 - Add notes
+- List all notes
+- Search notes
 - Edit notes
 - Delete notes
-- Search notes
-- List all notes
-- Save notes to JSON file
-- Store notes using `Map`
+- SQLite storage
 
-## Project Structure
+## Tech Stack
 
-```txt
-project/
-│── index.js
-│── commands.js
-│── handlers.js
-│── storage.js
-
-notes.json
-README.md
-```
-
-### File Description
-
-- `index.js` — receives command-line arguments and starts the app
-- `commands.js` — handles commands and validation
-- `handlers.js` — contains business logic handlers
-- `storage.js` — works with notes storage, file system, and `Map`
-- `notes.json` — stores notes data
+- Node.js
+- SQLite (`node:sqlite`)
 
 ## Installation
 
-Clone repository:
+Clone repository: https://github.com/detrit89/notesApp
 
 ```bash
-git clone https://github.com/detrit89/notesApp.git
+git clone YOUR_REPOSITORY_URL
 ```
 
 Go to project folder:
 
 ```bash
-cd notesApp
+cd project-folder
 ```
 
-Run commands with Node.js.
+Run the application:
 
-## Commands
+```bash
+node project/index.js
+```
 
-### Add note
+## Available Commands
+
+### Add new note
 
 ```bash
 node project/index.js add "title" "body"
@@ -60,26 +47,12 @@ node project/index.js add "title" "body"
 Example:
 
 ```bash
-node project/index.js add "Shopping" "Buy milk"
+node project/index.js add "Gym" "Push day"
 ```
 
 ---
 
-### Edit note
-
-```bash
-node project/index.js edit ID "new title" "new body"
-```
-
-Example:
-
-```bash
-node project/index.js edit 1 "Gym" "Go workout"
-```
-
----
-
-### List notes
+### Show all notes
 
 ```bash
 node project/index.js list
@@ -96,7 +69,21 @@ node project/index.js search "text"
 Example:
 
 ```bash
-node project/index.js search "milk"
+node project/index.js search "gym"
+```
+
+---
+
+### Edit note
+
+```bash
+node project/index.js edit ID "title" "body"
+```
+
+Example:
+
+```bash
+node project/index.js edit 1 "Gym" "Leg day"
 ```
 
 ---
@@ -121,26 +108,20 @@ node project/index.js delete 1
 node project/index.js help
 ```
 
-## Technologies
+## Project Structure
 
-- JavaScript (ES Modules)
-- Node.js
-- File System (`fs`)
-- `Map` data structure
-- JSON storage
-
-## How it works
-
-Notes are stored in memory using JavaScript `Map`.
-
-Each note has:
-
-```json
-{
-  "title": "Shopping",
-  "body": "Buy milk",
-  "createdAt": "date"
-}
+```txt
+project/
+  ├── index.js       # entry point
+  ├── commands.js    # command orchestration
+  ├── handlers.js    # command handling
+  ├── storage.js    # SQLite logic
+├─ notes.db       # database
 ```
 
-Notes are automatically saved to `notes.json`.
+## Future Improvements
+
+- Validation improvements
+- Better CLI UX
+- Tests
+- Async database support
