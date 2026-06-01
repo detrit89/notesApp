@@ -2,7 +2,7 @@ import {handleAddNote, handleDeleteNote, handleListNotes, handleSearchNotes, hel
 
 export function runCommand(command, arg1, arg2, arg3) {
     if (!command) {
-        console.log("Write command")
+        helpCommand()
         return
     }
     switch (command) {
