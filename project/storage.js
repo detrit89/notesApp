@@ -1,78 +1,64 @@
-import fs from "fs"
+import { DatabaseSync } from "node:sqlite"
+const database = new DatabaseSync("notes.db")
 
-const FILE_NAME = 'notes.json'
 
-function loadNotes() {
-    try {
-        const data = fs.readFileSync(FILE_NAME, 'utf-8')
-        return new Map( Object.entries(JSON.parse(data))
-            .map(([id, note]) => [Number(id), note])
-)
-    } catch(error) {
-        console.error(`Failed to load notes: ${error}`)
-        return new Map()
-    }
-}
-
-export function saveNotes (notes) {
-    fs.writeFileSync(FILE_NAME, JSON.stringify(Object.fromEntries(notes), null, 2))
-}
-
-export const notes = loadNotes()
-
-let noteId = 1
-for (const id of notes.keys()) {
-    if (Number(id) >= noteId) {
-        noteId = Number(id) + 1
-    }
-}
+database.exec(`
+    CREATE TABLE IF NOT EXISTS notes (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    title TEXT,
+    body TEXT,
+    createdAt TEXT
+    )
+`)
 
 export function deleteNote (id) {
-    const isDeleted = notes.delete(Number(id))
-    if (isDeleted) {
-        saveNotes(notes)
-    }
-    return isDeleted
+    const statement = database.prepare(`
+        DELETE FROM notes
+        Where id = ?
+        `)
+       const deleteResult = statement.run(id)
+       if (deleteResult.changes === 0) {
+        return false
+       }
+    return true
 }
 
 export function searchNotes (searchText) {
-    const query = searchText.toLowerCase()
-    const foundNotes = []
-    for (const [id, note] of notes) {
-        if (note.body.toLowerCase().includes(query) || note.title.toLowerCase().includes(query)) {
-               foundNotes.push({index: id, note})
-        }
-    }
-    return foundNotes
+    const query = `%${searchText}%`
+    const statement = database.prepare(`
+        SELECT * FROM notes
+        WHERE title LIKE ? OR body LIKE ?
+        `)
+       return statement.all(query, query)
 }
 
-export function addNote (title, body) {
-    const newNote = {
-        title: title,
-        body: body,
-        createdAt: new Date().toLocaleString()
-    }
 
-    notes.set(noteId, newNote)
-    noteId++
-    saveNotes(notes)
+export function addNote(title, body) {
+    const insertNoteStatement = database.prepare(`
+        INSERT INTO notes (title, body, createdAt)
+        VALUES (?, ?, ?)
+        `)
+    insertNoteStatement.run(title, body, new Date().toLocaleString())
 }
+
 
 export function getAllNotes () {
-    const notesList = []
-    for (const [id, note] of notes) {
-        notesList.push({index: id, note})
-    }
-    return notesList
+    const statement = database.prepare(`
+        SELECT * FROM notes
+    `)
+    return statement.all()
 }
 
 export function editNote(id, newTitle, newBody) {
-    const note = notes.get(Number(id))
-    if (!note) {
-        return false
-    }
-    note.title = newTitle
-    note.body = newBody
-    saveNotes(notes)
-    return true
+    const statement = database.prepare (`
+        UPDATE notes
+        SET title = ?,
+            body = ?
+        WHERE id = ?
+        `)
+    const editResult = statement.run(newTitle, newBody, Number(id))
+   if (editResult.changes === 0) {
+    return false
+   }
+   return true
 }

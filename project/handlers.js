@@ -1,7 +1,7 @@
 import { addNote, getAllNotes, searchNotes, deleteNote, editNote } from "./storage.js"
 
-export function formatNote(note, index) {
-    return `${index} - ${note.title} - ${note.body} - ${note.createdAt} `
+export function formatNote(note) {
+    return `${note.id} - ${note.title} - ${note.body} - ${note.createdAt} `
 }
 
 export function handleSearchNotes(searchText) {
@@ -11,13 +11,13 @@ export function handleSearchNotes(searchText) {
         return
     }
     foundNotes.forEach((item) => {
-        console.log(formatNote(item.note, item.index))
+        console.log(formatNote(item))
     })
 }
 
 export function handleDeleteNote(id) {
-    const isDeleteSuccessful = deleteNote(id)
-    if (!isDeleteSuccessful) {
+    const isDeleted = deleteNote(id)
+    if (!isDeleted) {
         console.log(`Note not found`)
         return
     } 
@@ -37,7 +37,7 @@ export function handleListNotes() {
     }
 
     notes.forEach((item) => {
-        console.log(formatNote(item.note, item.index))
+        console.log(formatNote(item))
     })
 }
 
