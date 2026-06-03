@@ -1,0 +1,11 @@
+{
+  "name": "notes-api",
+  "type": "module",
+  "private": true,
+  "scripts": {
+    "start": "bun project/server.js"
+  },
+  "devDependencies": {
+    "@types/bun": "latest"
+  }
+}

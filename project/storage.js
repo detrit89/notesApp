@@ -1,5 +1,7 @@
-import { DatabaseSync } from "node:sqlite"
-const database = new DatabaseSync("notes.db")
+import { Database } from "bun:sqlite"
+const database = new Database("notes.db")
+
+
 
 
 database.exec(`
