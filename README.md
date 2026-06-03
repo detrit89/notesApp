@@ -1,127 +1,128 @@
-# Notes CLI App
+# Notes API
 
-Simple CLI application for managing notes using SQLite and Node.js.
+Simple REST API for notes built with **Bun** and **SQLite**.
 
 ## Features
 
-- Add notes
-- List all notes
+- Create notes
+- Get all notes
 - Search notes
-- Edit notes
+- Update notes
 - Delete notes
 - SQLite storage
+- HTTP status codes and error handling
 
 ## Tech Stack
 
-- Node.js
-- SQLite (`node:sqlite`)
-
-## Installation
-
-Clone repository: https://github.com/detrit89/notesApp
-
-```bash
-git clone YOUR_REPOSITORY_URL
-```
-
-Go to project folder:
-
-```bash
-cd project-folder
-```
-
-Run the application:
-
-```bash
-node project/index.js
-```
-
-## Available Commands
-
-### Add new note
-
-```bash
-node project/index.js add "title" "body"
-```
-
-Example:
-
-```bash
-node project/index.js add "Gym" "Push day"
-```
-
----
-
-### Show all notes
-
-```bash
-node project/index.js list
-```
-
----
-
-### Search notes
-
-```bash
-node project/index.js search "text"
-```
-
-Example:
-
-```bash
-node project/index.js search "gym"
-```
-
----
-
-### Edit note
-
-```bash
-node project/index.js edit ID "title" "body"
-```
-
-Example:
-
-```bash
-node project/index.js edit 1 "Gym" "Leg day"
-```
-
----
-
-### Delete note
-
-```bash
-node project/index.js delete ID
-```
-
-Example:
-
-```bash
-node project/index.js delete 1
-```
-
----
-
-### Help
-
-```bash
-node project/index.js help
-```
+- Bun
+- SQLite
+- JavaScript
 
 ## Project Structure
 
 ```txt
 project/
-  ├── index.js       # entry point
-  ├── commands.js    # command orchestration
-  ├── handlers.js    # command handling
-  ├── storage.js    # SQLite logic
-├─ notes.db       # database
+├── server.js      # HTTP server and routes
+├── storage.js     # Database logic
+
+package.json
+README.md
+.gitignore
 ```
 
-## Future Improvements
+## Installation
 
-- Validation improvements
-- Better CLI UX
-- Tests
-- Async database support
+Clone the repository:
+
+```bash
+git clone <repository-url>
+cd notes-api
+```
+
+Install dependencies:
+
+```bash
+bun install
+```
+
+## Run
+
+```bash
+bun project/server.js
+```
+
+Server starts on:
+
+```txt
+http://localhost:3000
+```
+
+## Database
+
+The SQLite database file (`notes.db`) is created automatically on first run.
+
+No manual setup is required.
+
+## API Endpoints
+
+### Get all notes
+
+```http
+GET /notes
+```
+
+### Search notes
+
+```http
+GET /notes?search=text
+```
+
+### Create note
+
+```http
+POST /notes
+```
+
+Body:
+
+```json
+{
+  "title": "Gym",
+  "body": "Push day"
+}
+```
+
+### Update note
+
+```http
+PUT /notes/:id
+```
+
+Body:
+
+```json
+{
+  "title": "Gym",
+  "body": "Pull day"
+}
+```
+
+### Delete note
+
+```http
+DELETE /notes/:id
+```
+
+## Status Codes
+
+| Code | Description |
+|--------|------------|
+| 200 | OK |
+| 201 | Created |
+| 400 | Bad Request |
+| 404 | Not Found |
+| 500 | Internal Server Error |
+
+## Author
+
+Learning backend development with Bun and SQLite.
